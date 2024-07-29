@@ -11,22 +11,19 @@ jobs:
     strategy:
       max-parallel: 3
       matrix:
-        os: [self-hosted]
+        os: [macos-latest]
     steps:
-      - name: run some command
-        run: ls /tmp
-        
-      # - name: Install Invoke-AtomicRedTeam and download atomics
-      #   shell: pwsh
-      #   run: |
-      #     Install-Module -Name invoke-atomicredteam,powershell-yaml -Scope CurrentUser -SkipPublisherCheck -Force
-      #     IEX (IWR 'https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/install-atomicsfolder.ps1' -UseBasicParsing);
-      #     Install-AtomicsFolder
-      # - name: Perform atomic tests on a schedule
-      #   shell: pwsh
-      #   run: |
-      #     Invoke-AtomicTest All -GetPreReqs -TimeoutSeconds 6000 -ExecutionLogPath /tmp/logs.csv
-      # - uses: actions/upload-artifact@v3
-      #   with:
-      #     name: logs.csv
-      #     path: /tmp
+      - name: Install Invoke-AtomicRedTeam and download atomics
+        shell: pwsh
+        run: |
+          Install-Module -Name invoke-atomicredteam,powershell-yaml -Scope CurrentUser -SkipPublisherCheck -Force
+          IEX (IWR 'https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/install-atomicsfolder.ps1' -UseBasicParsing);
+          Install-AtomicsFolder
+      - name: Perform atomic tests on a schedule
+        shell: pwsh
+        run: |
+          Invoke-AtomicTest All -GetPreReqs -TimeoutSeconds 6000 -ExecutionLogPath /tmp/logs.csv
+      - uses: actions/upload-artifact@v3
+        with:
+          name: logs.csv
+          path: /tmp
